@@ -34,6 +34,26 @@ export async function installRustup() {
 	core.info('Installed rustup');
 }
 
+export async function createDenyToml() {
+	try {
+		const denyTomlPath = path.join(process.cwd(), 'config', 'cargo-deny', 'deny.toml');
+		await fs.promises.mkdir(path.dirname(denyTomlPath), { recursive: true });
+		const denyTomlContent = `
+[licenses]
+allow = [
+	"MIT",              # MIT License
+	"Apache-2.0",       # Apache License 2.0
+]
+`;
+		await fs.promises.writeFile(denyTomlPath, denyTomlContent, 'utf8');
+
+		core.info(`deny.toml file created at ${denyTomlPath}`);
+	} catch (error) {
+		core.setFailed(`Error creating deny.toml: ${(error as Error).message}`);
+	}
+}
+
+
 async function run() {
 	core.info('Setting cargo environment variables');
 
@@ -52,6 +72,8 @@ async function run() {
 		// Restore cache after the toolchain has been installed,
 		// as we use the rust version and commit hashes in the cache key!
 		await restoreCache();
+
+		await createDenyToml();
 	} catch (error: unknown) {
 		core.setFailed((error as Error).message);
 
