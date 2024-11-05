@@ -39,6 +39,11 @@ export async function createDenyToml() {
 		const denyTomlPath = path.join(process.cwd(), 'deny.toml');
 		await fs.promises.mkdir(path.dirname(denyTomlPath), { recursive: true });
 		const denyTomlContent = `
+[advisories]
+ignore = [
+    "RUSTSEC-2023-0071", # Marvin RSA attack -- No fix on the horizon
+]
+
 [licenses]
 confidence-threshold = 0.93
 allow = [
