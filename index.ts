@@ -36,14 +36,27 @@ export async function installRustup() {
 
 export async function createDenyToml() {
 	try {
-		const denyTomlPath = path.join(process.cwd(), 'config', 'cargo-deny', 'deny.toml');
+		const denyTomlPath = path.join(process.cwd(), 'deny.toml');
 		await fs.promises.mkdir(path.dirname(denyTomlPath), { recursive: true });
 		const denyTomlContent = `
+[advisories]
+ignore = [
+    "RUSTSEC-2023-0071", # Marvin RSA attack -- No fix on the horizon
+    "RUSTSEC-2024-0436", # paste is unmaintained
+]
+
 [licenses]
+confidence-threshold = 0.93
 allow = [
 	"MIT",              # MIT License
 	"Apache-2.0",       # Apache License 2.0
+  "Unicode-3.0",      # Unicode v3
+  "Zlib",
+  "BSD-3-Clause",
+  "MPL-2.0",
+  "ISC",
 ]
+private = { ignore = true, registries = ["ocr-labs"] }
 `;
 		await fs.promises.writeFile(denyTomlPath, denyTomlContent, 'utf8');
 
@@ -52,7 +65,6 @@ allow = [
 		core.setFailed(`Error creating deny.toml: ${(error as Error).message}`);
 	}
 }
-
 
 async function run() {
 	core.info('Setting cargo environment variables');
