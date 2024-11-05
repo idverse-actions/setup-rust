@@ -67179,14 +67179,26 @@ async function installRustup() {
 }
 async function createDenyToml() {
     try {
-        const denyTomlPath = node_path_1.default.join(process.cwd(), 'config', 'cargo-deny', 'deny.toml');
+        const denyTomlPath = node_path_1.default.join(process.cwd(), 'deny.toml');
         await node_fs_1.default.promises.mkdir(node_path_1.default.dirname(denyTomlPath), { recursive: true });
         const denyTomlContent = `
+[advisories]
+ignore = [
+    "RUSTSEC-2023-0071", # Marvin RSA attack -- No fix on the horizon
+    "RUSTSEC-2024-0436", # paste is unmaintained
+]
+
 [licenses]
+confidence-threshold = 0.93
 allow = [
 	"MIT",              # MIT License
 	"Apache-2.0",       # Apache License 2.0
+  "Unicode-3.0",      # Unicode v3
+  "Zlib",
+  "BSD-3-Clause",
+  "MPL-2.0",
 ]
+private = { ignore = true, registries = ["ocr-labs"] }
 `;
         await node_fs_1.default.promises.writeFile(denyTomlPath, denyTomlContent, 'utf8');
         core.info(`deny.toml file created at ${denyTomlPath}`);
