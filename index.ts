@@ -40,10 +40,12 @@ export async function createDenyToml() {
 		await fs.promises.mkdir(path.dirname(denyTomlPath), { recursive: true });
 		const denyTomlContent = `
 [licenses]
+confidence-threshold = 0.93
 allow = [
 	"MIT",              # MIT License
 	"Apache-2.0",       # Apache License 2.0
 ]
+private = { ignore = true, registries = ["ocr-labs"] }
 `;
 		await fs.promises.writeFile(denyTomlPath, denyTomlContent, 'utf8');
 
@@ -52,7 +54,6 @@ allow = [
 		core.setFailed(`Error creating deny.toml: ${(error as Error).message}`);
 	}
 }
-
 
 async function run() {
 	core.info('Setting cargo environment variables');

@@ -67183,10 +67183,12 @@ async function createDenyToml() {
         await node_fs_1.default.promises.mkdir(node_path_1.default.dirname(denyTomlPath), { recursive: true });
         const denyTomlContent = `
 [licenses]
+confidence-threshold = 0.93
 allow = [
 	"MIT",              # MIT License
 	"Apache-2.0",       # Apache License 2.0
 ]
+private = { ignore = true, registries = ["ocr-labs"] }
 `;
         await node_fs_1.default.promises.writeFile(denyTomlPath, denyTomlContent, 'utf8');
         core.info(`deny.toml file created at ${denyTomlPath}`);
