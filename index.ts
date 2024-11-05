@@ -36,7 +36,7 @@ export async function installRustup() {
 
 export async function createDenyToml() {
 	try {
-		const denyTomlPath = path.join(process.cwd(), 'config', 'cargo-deny', 'deny.toml');
+		const denyTomlPath = path.join(process.cwd(), 'deny.toml');
 		await fs.promises.mkdir(path.dirname(denyTomlPath), { recursive: true });
 		const denyTomlContent = `
 [licenses]

@@ -67179,7 +67179,7 @@ async function installRustup() {
 }
 async function createDenyToml() {
     try {
-        const denyTomlPath = node_path_1.default.join(process.cwd(), 'config', 'cargo-deny', 'deny.toml');
+        const denyTomlPath = node_path_1.default.join(process.cwd(), 'deny.toml');
         await node_fs_1.default.promises.mkdir(node_path_1.default.dirname(denyTomlPath), { recursive: true });
         const denyTomlContent = `
 [licenses]
